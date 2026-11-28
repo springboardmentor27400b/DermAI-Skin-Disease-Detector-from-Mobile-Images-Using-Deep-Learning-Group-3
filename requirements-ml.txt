@@ -1,0 +1,6 @@
+# Milestone 2 training / evaluation (adds to requirements.txt). Use a GPU build of torch for training:
+# https://pytorch.org/get-started/locally/
+-r requirements.txt
+torch>=2.2
+torchvision>=0.17
+

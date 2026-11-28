@@ -1,0 +1,37 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: npm ci && npm run build
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        with: { name: frontend-dist, path: frontend/dist }
+  backend:
+    needs: frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: frontend-dist, path: backend/frontend_dist }      # one test serves the pre-built web app
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip }
+      - run: pip install -r backend/requirements.txt torch --extra-index-url https://download.pytorch.org/whl/cpu
+      - run: python -m pytest -q
+        working-directory: backend
+  docker:
+    needs: [frontend, backend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose build
+      - name: Smoke test
+        run: |
+          docker compose up -d
+          for i in $(seq 1 40); do curl -fs localhost:8080/api/health/ready && break; sleep 3; done
+          curl -fs localhost:8080/api/health/ready
+          docker compose down -v

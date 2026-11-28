@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Role themes. Values are "R G B" so Tailwind opacity modifiers work.
+   clinician = sleek/clinical (default), patient = soft/reassuring, research = graphite + indigo. */
+:root, [data-theme="clinician"] {
+  --accent: 31 95 168; --accent-dark: 23 74 133; --accent-soft: 220 232 245;
+  --canvas: 238 241 245; --line: 207 214 223; --ink: 15 26 38; --mute: 91 105 120;
+  --hero-bg: 15 26 38; --hero-fg: 255 255 255; --hero-mute: 160 178 198;
+  --radius: 3px; --clay: 165 86 74;
+}
+[data-theme="home"] {
+  --accent: 17 77 56; --accent-dark: 12 58 42; --accent-soft: 223 240 231;
+  --canvas: 247 249 244; --line: 222 230 221; --ink: 20 38 30; --mute: 90 108 99;
+  --hero-bg: 223 240 231; --hero-fg: 20 38 30; --hero-mute: 74 99 89;
+  --radius: 14px; --clay: 165 86 74;
+}
+[data-theme="patient"] {
+  --accent: 38 120 107; --accent-dark: 30 94 84; --accent-soft: 218 238 232;
+  --canvas: 244 247 242; --line: 217 226 218; --ink: 36 54 47; --mute: 94 113 104;
+  --hero-bg: 222 239 232; --hero-fg: 36 54 47; --hero-mute: 74 99 89;
+  --radius: 14px; --clay: 165 86 74;
+}
+[data-theme="research"] {
+  --accent: 74 71 163; --accent-dark: 58 55 133; --accent-soft: 227 226 244;
+  --canvas: 240 239 246; --line: 214 212 230; --ink: 27 26 51; --mute: 96 94 125;
+  --hero-bg: 29 27 58; --hero-fg: 255 255 255; --hero-mute: 170 168 205;
+  --radius: 4px; --clay: 165 86 74;
+}
+
+@layer base {
+  body { @apply bg-canvas text-ink font-sans antialiased transition-colors duration-500; }
+  :focus-visible { @apply outline outline-2 outline-offset-2 outline-accent; }
+}
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded px-4 py-2 text-sm font-semibold transition duration-150 active:translate-y-px disabled:opacity-50 disabled:cursor-not-allowed; }
+  .btn-primary { @apply btn bg-accent text-white hover:bg-accent-dark; }
+  .btn-ghost { @apply btn border border-line bg-white text-ink hover:border-accent/50 hover:bg-canvas; }
+  .btn-danger { @apply btn border border-danger/40 bg-white text-danger hover:bg-danger-soft; }
+  .input { @apply w-full rounded border border-line bg-white px-3 py-2 text-sm transition duration-150 placeholder:text-mute/70 hover:border-accent/50 focus:border-accent focus:ring-2 focus:ring-accent/20; }
+  .label { @apply mb-1 block text-sm font-medium; }
+  .panel { @apply rounded border border-line bg-white transition-colors duration-500; }
+  .h-page { @apply text-2xl font-semibold tracking-tight; }
+  .hint { @apply mt-1 text-xs text-mute; }
+}
+
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ---- Hover effects. Only on devices that can hover; the movement only when motion is allowed. ---- */
+.lift, .lift-soft {
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background-color .5s ease, color .5s ease;
+}
+.hero-img { transition: transform .5s ease, box-shadow .5s ease; }
+.nav-link {
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 1.5px no-repeat;
+  padding-bottom: 2px;
+  transition: background-size .25s ease, color .2s ease;
+}
+tbody tr { transition: background-color .15s ease; }
+
+@media (hover: hover) {
+  .lift:hover, .lift-soft:hover { box-shadow: 0 12px 28px -14px rgb(var(--ink) / .30); border-color: rgb(var(--accent) / .45); }
+  .btn-primary:hover { box-shadow: 0 8px 18px -10px rgb(var(--accent) / .8); }
+  .hero-img:hover { box-shadow: 0 24px 48px -24px rgb(var(--ink) / .35); }
+  .nav-link:hover { background-size: 100% 1.5px; color: rgb(var(--accent)); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .lift:hover { transform: translateY(-3px); }
+  .btn-primary:hover { transform: translateY(-1px); }
+  .hero-img:hover { transform: scale(1.025); }
+}
+

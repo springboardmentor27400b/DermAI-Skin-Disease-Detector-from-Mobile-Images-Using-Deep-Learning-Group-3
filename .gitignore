@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.env
+*.db
+backend/storage/
+node_modules/
+dist/
+ml/data/*
+!ml/data/.gitkeep
+ml/reports/
+.pytest_cache/
+.venv/
+backend/models/
+ml/runs/
+combined_project.md
+todocx.py
+

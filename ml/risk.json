@@ -1,0 +1,61 @@
+{
+  "protocol": "dermai-risk-v1 (sens 0.90, spec 0.90)",
+  "malignant_classes": [
+    "BCC",
+    "SCC",
+    "MEL"
+  ],
+  "target_sensitivity": 0.9,
+  "high_specificity": 0.9,
+  "t_low": 0.333,
+  "t_high": 0.6514,
+  "fitted_on": "pooled validation predictions, 2298 images (1089 malignant), source runs\\m2_sampler\\convnext_tiny",
+  "performance": {
+    "validation": {
+      "images": 2298,
+      "malignant_images": 1089,
+      "sensitivity_not_low": 0.9008264462809917,
+      "specificity_low": 0.7344913151364765,
+      "categories": {
+        "low": {
+          "share_of_images": 0.43342036553524804,
+          "malignant_share": 0.10843373493975904,
+          "images": 996
+        },
+        "moderate": {
+          "share_of_images": 0.1731940818102698,
+          "malignant_share": 0.49748743718592964,
+          "images": 398
+        },
+        "high": {
+          "share_of_images": 0.39338555265448216,
+          "malignant_share": 0.8661504424778761,
+          "images": 904
+        }
+      }
+    },
+    "test": {
+      "images": 2298,
+      "malignant_images": 1089,
+      "sensitivity_not_low": 0.9044995408631772,
+      "specificity_low": 0.7402812241521919,
+      "categories": {
+        "low": {
+          "share_of_images": 0.4347258485639687,
+          "malignant_share": 0.1041041041041041,
+          "images": 999
+        },
+        "moderate": {
+          "share_of_images": 0.17058311575282856,
+          "malignant_share": 0.5280612244897959,
+          "images": 392
+        },
+        "high": {
+          "share_of_images": 0.3946910356832028,
+          "malignant_share": 0.8577728776185226,
+          "images": 907
+        }
+      }
+    }
+  }
+}

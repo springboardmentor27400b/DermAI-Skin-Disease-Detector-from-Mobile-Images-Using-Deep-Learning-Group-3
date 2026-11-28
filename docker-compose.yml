@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dermai
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dermai}
+      POSTGRES_DB: dermai
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U dermai"], interval: 5s, retries: 10 }
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-development}          # "production" on a server: refuses default secrets, adds HSTS
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      DATABASE_URL: postgresql+psycopg2://dermai:${POSTGRES_PASSWORD:-dermai}@db:5432/dermai
+      SECRET_KEY: ${SECRET_KEY:-dev-only-change-me}
+      MODEL_DIR: /app/models
+      UPLOAD_DIR: /data/uploads
+      PROCESSED_DIR: /data/processed
+      CORS_ORIGINS: ${CORS_ORIGINS:-["http://localhost:8080"]}
+      FIRST_ADMIN_EMAIL: ${FIRST_ADMIN_EMAIL:-admin@dermai.local}
+      FIRST_ADMIN_PASSWORD: ${FIRST_ADMIN_PASSWORD:-ChangeMe!2026}
+    # read-write: Administration > Models writes active.json when you deploy or roll back a version
+    volumes: [media:/data, "./backend/models:/app/models"]
+    depends_on: { db: { condition: service_healthy } }
+    ports: ["8000:8000"]
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on: { backend: { condition: service_healthy } }
+    ports: ["8080:80"]
+
+volumes: { pgdata: {}, media: {} }
